@@ -232,7 +232,7 @@ risk_level = calculate_discrete_level(risk_score)
 
 1. **Clone or Download the Repository**
    ```bash
-   git clone https://github.com/nqobizitha/fire-detection-system.git
+   git clone https://github.com/thabhelo/fire-detection-system.git
    cd fire-detection-system
    ```
 
