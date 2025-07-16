@@ -3,43 +3,487 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fire Detection Dashboard</title>
+    <title>Fire Detection System - Central Monitoring Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="dashboard">
-        <h1>🔥 Fire Detection System</h1>
-        
-        <div class="status-panel">
-            <div class="status-card" id="riskStatus">
-                <h3>Current Risk Level</h3>
-                <div class="risk-level" id="riskLevel">SAFE</div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-fire-flame-curved"></i>
+                <h1>Fire Detection System</h1>
+                <span class="version">v2.1.0</span>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="label">Active Devices</span>
+                    <span class="value" id="activeDevices">12</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Current Alerts</span>
+                    <span class="value alert" id="currentAlerts">2</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">System Status</span>
+                    <span class="value online" id="systemStatus">ONLINE</span>
+                </div>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-user-circle"></i>
+                <span>Nqobizitha Moyo</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="overview">
+            <i class="fas fa-tachometer-alt"></i>
+            Overview
+        </button>
+        <button class="tab-btn" data-tab="devices">
+            <i class="fas fa-microchip"></i>
+            Devices
+        </button>
+        <button class="tab-btn" data-tab="map">
+            <i class="fas fa-map-marked-alt"></i>
+            Location Map
+        </button>
+        <button class="tab-btn" data-tab="analytics">
+            <i class="fas fa-chart-line"></i>
+            Analytics
+        </button>
+        <button class="tab-btn" data-tab="alerts">
+            <i class="fas fa-bell"></i>
+            Alerts
+        </button>
+        <button class="tab-btn" data-tab="settings">
+            <i class="fas fa-cog"></i>
+            Settings
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Overview Tab -->
+        <div class="tab-content active" id="overview">
+            <div class="overview-grid">
+                <!-- Risk Assessment Panel -->
+                <div class="panel risk-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Current Risk Assessment</h3>
+                        <div class="last-updated">Last updated: <span id="lastUpdated">--</span></div>
+                    </div>
+                    <div class="risk-display">
+                        <div class="risk-level-indicator" id="riskIndicator">
+                            <div class="risk-circle">
+                                <div class="risk-text" id="riskLevel">SAFE</div>
+                                <div class="risk-score" id="riskScore">0.2</div>
+                            </div>
+                        </div>
+                        <div class="risk-factors">
+                            <div class="factor">
+                                <span class="factor-name">Gas Concentration</span>
+                                <div class="factor-bar">
+                                    <div class="factor-fill" style="width: 20%"></div>
+                                </div>
+                                <span class="factor-value">Low</span>
+                            </div>
+                            <div class="factor">
+                                <span class="factor-name">Temperature</span>
+                                <div class="factor-bar">
+                                    <div class="factor-fill" style="width: 35%"></div>
+                                </div>
+                                <span class="factor-value">Normal</span>
+                            </div>
+                            <div class="factor">
+                                <span class="factor-name">Flame Detection</span>
+                                <div class="factor-bar">
+                                    <div class="factor-fill" style="width: 0%"></div>
+                                </div>
+                                <span class="factor-value">Clear</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sensor Readings Grid -->
+                <div class="panel sensors-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-thermometer-half"></i> Real-time Sensor Data</h3>
+                        <div class="refresh-btn" onclick="refreshSensorData()">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                    </div>
+                    <div class="sensors-grid">
+                        <div class="sensor-card gas">
+                            <div class="sensor-icon">
+                                <i class="fas fa-smog"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h4>Gas Sensors</h4>
+                                <div class="sensor-readings">
+                                    <div class="reading">
+                                        <span class="reading-label">LPG</span>
+                                        <span class="reading-value" id="gasLPG">45 ppm</span>
+                                    </div>
+                                    <div class="reading">
+                                        <span class="reading-label">Smoke</span>
+                                        <span class="reading-value" id="gasSmoke">23 ppm</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sensor-status safe">Safe</div>
+                        </div>
+
+                        <div class="sensor-card temperature">
+                            <div class="sensor-icon">
+                                <i class="fas fa-thermometer-half"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h4>Environmental</h4>
+                                <div class="sensor-readings">
+                                    <div class="reading">
+                                        <span class="reading-label">Temperature</span>
+                                        <span class="reading-value" id="temperature">24.5°C</span>
+                                    </div>
+                                    <div class="reading">
+                                        <span class="reading-label">Humidity</span>
+                                        <span class="reading-value" id="humidity">65%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sensor-status safe">Normal</div>
+                        </div>
+
+                        <div class="sensor-card flame">
+                            <div class="sensor-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h4>Flame Detection</h4>
+                                <div class="sensor-readings">
+                                    <div class="reading">
+                                        <span class="reading-label">IR Signal</span>
+                                        <span class="reading-value" id="flameIR">0.2V</span>
+                                    </div>
+                                    <div class="reading">
+                                        <span class="reading-label">UV Signal</span>
+                                        <span class="reading-value" id="flameUV">0.1V</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sensor-status safe">No Flame</div>
+                        </div>
+
+                        <div class="sensor-card wind">
+                            <div class="sensor-icon">
+                                <i class="fas fa-wind"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h4>Wind Conditions</h4>
+                                <div class="sensor-readings">
+                                    <div class="reading">
+                                        <span class="reading-label">Speed</span>
+                                        <span class="reading-value" id="windSpeed">12 m/s</span>
+                                    </div>
+                                    <div class="reading">
+                                        <span class="reading-label">Direction</span>
+                                        <span class="reading-value" id="windDirection">NE (45°)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sensor-status safe">Favorable</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Health Panel -->
+                <div class="panel health-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-heartbeat"></i> System Health</h3>
+                    </div>
+                    <div class="health-grid">
+                        <div class="health-item">
+                            <div class="health-icon">
+                                <i class="fas fa-battery-three-quarters"></i>
+                            </div>
+                            <div class="health-info">
+                                <h4>Battery Status</h4>
+                                <div class="battery-level">
+                                    <div class="battery-bar">
+                                        <div class="battery-fill" style="width: 78%"></div>
+                                    </div>
+                                    <span class="battery-percentage" id="batteryLevel">78%</span>
+                                </div>
+                                <span class="health-detail">12.5 hours remaining</span>
+                            </div>
+                        </div>
+
+                        <div class="health-item">
+                            <div class="health-icon">
+                                <i class="fas fa-solar-panel"></i>
+                            </div>
+                            <div class="health-info">
+                                <h4>Solar Charging</h4>
+                                <span class="health-value" id="solarPower">15.2W</span>
+                                <span class="health-detail">Charging active</span>
+                            </div>
+                        </div>
+
+                        <div class="health-item">
+                            <div class="health-icon">
+                                <i class="fas fa-signal"></i>
+                            </div>
+                            <div class="health-info">
+                                <h4>Communication</h4>
+                                <div class="comm-status">
+                                    <span class="comm-item online">4G LTE</span>
+                                    <span class="comm-item online">LoRa</span>
+                                    <span class="comm-item online">WiFi</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="health-item">
+                            <div class="health-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="health-info">
+                                <h4>GPS Status</h4>
+                                <span class="health-value">8 satellites</span>
+                                <span class="health-detail">High accuracy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Alerts -->
+                <div class="panel alerts-summary">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-bell"></i> Recent Alerts</h3>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+                    <div class="alerts-list">
+                        <div class="alert-item warning">
+                            <div class="alert-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <div class="alert-title">Temperature threshold exceeded</div>
+                                <div class="alert-detail">Device FD-001 - Zone A</div>
+                                <div class="alert-time">2 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="alert-item info">
+                            <div class="alert-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <div class="alert-title">Device calibration completed</div>
+                                <div class="alert-detail">Device FD-003 - Zone B</div>
+                                <div class="alert-time">15 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="alert-item success">
+                            <div class="alert-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <div class="alert-title">System test completed</div>
+                                <div class="alert-detail">All devices operational</div>
+                                <div class="alert-time">1 hour ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Devices Tab -->
+        <div class="tab-content" id="devices">
+            <div class="devices-header">
+                <h2>Device Management</h2>
+                <div class="devices-controls">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-plus"></i>
+                        Add Device
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-sync"></i>
+                        Refresh All
+                    </button>
+                </div>
             </div>
             
-            <div class="sensor-readings">
-                <div class="sensor-card">
-                    <h4>Gas Concentration</h4>
-                    <div class="sensor-value" id="gasValue">0 ppm</div>
-                </div>
-                
-                <div class="sensor-card">
-                    <h4>Temperature</h4>
-                    <div class="sensor-value" id="tempValue">0°C</div>
-                </div>
-                
-                <div class="sensor-card">
-                    <h4>Flame Detection</h4>
-                    <div class="sensor-value" id="flameValue">NO FLAME</div>
+            <div class="devices-grid">
+                <!-- Device cards will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Map Tab -->
+        <div class="tab-content" id="map">
+            <div class="map-container">
+                <div id="mapView" class="map-view"></div>
+                <div class="map-controls">
+                    <div class="map-legend">
+                        <h4>Device Status</h4>
+                        <div class="legend-item">
+                            <div class="legend-color safe"></div>
+                            <span>Safe</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color warning"></div>
+                            <span>Warning</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color critical"></div>
+                            <span>Critical</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color offline"></div>
+                            <span>Offline</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="controls">
-            <button onclick="testAlert()">Test Alert</button>
-            <button onclick="resetSystem()">Reset</button>
+
+        <!-- Analytics Tab -->
+        <div class="tab-content" id="analytics">
+            <div class="analytics-header">
+                <h2>Analytics & Trends</h2>
+                <div class="time-range-selector">
+                    <button class="time-btn active" data-range="24h">24H</button>
+                    <button class="time-btn" data-range="7d">7D</button>
+                    <button class="time-btn" data-range="30d">30D</button>
+                    <button class="time-btn" data-range="90d">90D</button>
+                </div>
+            </div>
+            
+            <div class="analytics-grid">
+                <div class="chart-panel">
+                    <h3>Sensor Trends</h3>
+                    <canvas id="sensorChart"></canvas>
+                </div>
+                <div class="chart-panel">
+                    <h3>Risk Level History</h3>
+                    <canvas id="riskChart"></canvas>
+                </div>
+                <div class="chart-panel">
+                    <h3>Device Performance</h3>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="chart-panel">
+                    <h3>Alert Statistics</h3>
+                    <canvas id="alertChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Tab -->
+        <div class="tab-content" id="alerts">
+            <div class="alerts-header">
+                <h2>Alert Management</h2>
+                <div class="alert-filters">
+                    <select class="filter-select">
+                        <option value="all">All Alerts</option>
+                        <option value="critical">Critical</option>
+                        <option value="warning">Warning</option>
+                        <option value="info">Info</option>
+                    </select>
+                    <input type="date" class="filter-date">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+            
+            <div class="alerts-table-container">
+                <table class="alerts-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Device</th>
+                            <th>Type</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alertsTableBody">
+                        <!-- Alert rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+            <div class="settings-container">
+                <div class="settings-sidebar">
+                    <div class="settings-nav">
+                        <button class="settings-nav-btn active" data-section="general">
+                            <i class="fas fa-cog"></i>
+                            General
+                        </button>
+                        <button class="settings-nav-btn" data-section="thresholds">
+                            <i class="fas fa-sliders-h"></i>
+                            Thresholds
+                        </button>
+                        <button class="settings-nav-btn" data-section="notifications">
+                            <i class="fas fa-bell"></i>
+                            Notifications
+                        </button>
+                        <button class="settings-nav-btn" data-section="system">
+                            <i class="fas fa-server"></i>
+                            System
+                        </button>
+                    </div>
+                </div>
+                <div class="settings-content">
+                    <!-- Settings panels will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Emergency Alert Modal -->
+    <div class="modal" id="emergencyModal">
+        <div class="modal-content emergency">
+            <div class="modal-header">
+                <h2><i class="fas fa-fire"></i> EMERGENCY ALERT</h2>
+            </div>
+            <div class="modal-body">
+                <div class="emergency-info">
+                    <p class="emergency-message">Critical fire hazard detected!</p>
+                    <p class="emergency-device">Device: <span id="emergencyDevice">FD-001</span></p>
+                    <p class="emergency-location">Location: <span id="emergencyLocation">Zone A</span></p>
+                    <p class="emergency-time">Time: <span id="emergencyTime">--</span></p>
+                </div>
+                <div class="emergency-actions">
+                    <button class="btn btn-danger" onclick="acknowledgeEmergency()">
+                        <i class="fas fa-check"></i>
+                        Acknowledge
+                    </button>
+                    <button class="btn btn-warning" onclick="callEmergencyServices()">
+                        <i class="fas fa-phone"></i>
+                        Call Emergency Services
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
 </html>
