@@ -504,7 +504,7 @@ Please use the GitHub Issues tab to report bugs with:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ### Academic Use
 This project is submitted as part of a final year Engineering project at the National University of Science and Technology, Zimbabwe. Academic use and reference are encouraged with proper citation.
@@ -541,6 +541,8 @@ For technical questions about implementation:
 - **Electronics Engineering Department** - Technical guidance and laboratory access
 - **Industrial Partners** - Real-world testing opportunities and feedback
 - **Open Source Community** - Libraries and frameworks used in development
+- **Thabhelo Duve [@thabhelo](github.com/thabhelo) and Larry Nqaba for mentorship on software engineering and product design**
+- 
 
 ### Special Thanks
 - Supervisor and academic team for guidance
@@ -552,8 +554,6 @@ For technical questions about implementation:
 
 **⚠️ Safety Notice**: This system is designed for industrial fire detection and should be installed and maintained by qualified personnel. Regular calibration and maintenance are essential for optimal performance.
 
-**🔥 Ready to explore the future of fire safety? Open the dashboard and see the system in action!**
-
 ---
 
-*Last Updated: December 2024 | Version: 2.1.0 | Status: Active Development*
+*Last Updated: July 2025 | Version: 1.0.1 | Status: Development*
