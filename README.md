@@ -12,7 +12,7 @@
 **Institution:** National University of Science and Technology - Zimbabwe  
 **Course:** Electronics Engineering - Final Year Project  
 **Project Type:** Industrial Fire Safety System  
-**Date:** 2024  
+**Date:** 7/15/2025  
 
 ---
 
