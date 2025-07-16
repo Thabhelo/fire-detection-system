@@ -4,10 +4,10 @@
 Industrial fire detection system using ESP32 microcontroller and multiple sensors to detect potential fire hazards in tank farm environments.
 
 ## Author
-[Your Name]  
-[Your Student ID]  
-[Your University]  
-[Date]
+Nqobizitha Moyo 
+Student #: N26 
+National University of Science and Technology - Zimbabwe
+Jul 15, 2025
 
 ## Components Used
 - ESP32 Development Board
@@ -42,10 +42,7 @@ Industrial fire detection system using ESP32 microcontroller and multiple sensor
 4. Open web dashboard
 
 ## Testing Results
-[Add your test results here]
+[Pending]
 
 ## Demo Video
 [Link to demo video]
-
-## Conclusion
-[Add your project conclusion]
