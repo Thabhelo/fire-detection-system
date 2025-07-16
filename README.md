@@ -1,6 +1,6 @@
 # 🔥 Fire Hazard Predictive Detection System
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Status: Active](https://img.shields.io/badge/Status-Active-green.svg)]()
 [![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32--S3-blue.svg)]()
 
