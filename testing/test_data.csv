@@ -1,0 +1,10 @@
+# Test Data for Fire Detection System
+
+# Simulated sensor readings for different scenarios
+# Format: timestamp, gas_ppm, temperature_c, flame_detected, risk_level
+
+2024-01-15 10:00:00, 50, 25, 0, SAFE
+2024-01-15 10:01:00, 45, 26, 0, SAFE
+2024-01-15 10:02:00, 180, 28, 0, MEDIUM
+2024-01-15 10:03:00, 320, 35, 0, HIGH
+2024-01-15 10:04:00, 450, 48, 1, CRITICAL

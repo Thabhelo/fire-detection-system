@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Detection Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <h1>🔥 Fire Detection System</h1>
+        
+        <div class="status-panel">
+            <div class="status-card" id="riskStatus">
+                <h3>Current Risk Level</h3>
+                <div class="risk-level" id="riskLevel">SAFE</div>
+            </div>
+            
+            <div class="sensor-readings">
+                <div class="sensor-card">
+                    <h4>Gas Concentration</h4>
+                    <div class="sensor-value" id="gasValue">0 ppm</div>
+                </div>
+                
+                <div class="sensor-card">
+                    <h4>Temperature</h4>
+                    <div class="sensor-value" id="tempValue">0°C</div>
+                </div>
+                
+                <div class="sensor-card">
+                    <h4>Flame Detection</h4>
+                    <div class="sensor-value" id="flameValue">NO FLAME</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button onclick="testAlert()">Test Alert</button>
+            <button onclick="resetSystem()">Reset</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
